@@ -1,4 +1,4 @@
-iimport { Suspense } from "react";
+import { Suspense } from "react";
 import ScanClient from "./scan-client";
 
 export const dynamic = "force-dynamic";
