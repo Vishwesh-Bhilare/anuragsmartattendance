@@ -1,49 +1,37 @@
-// components/qr/QRScanner.tsx
-
 "use client";
 
-import { useState } from "react";
-import dynamic from "next/dynamic";
-
-const QrReader = dynamic(() => import("react-qr-reader"), {
-  ssr: false,
-});
+import { useEffect } from "react";
+import { Html5Qrcode } from "html5-qrcode";
 
 interface QRScannerProps {
-  onScanSuccess: (token: string) => void;
+  onScan: (decodedText: string) => void;
 }
 
-export default function QRScanner({ onScanSuccess }: QRScannerProps) {
-  const [error, setError] = useState<string | null>(null);
-  const [scanned, setScanned] = useState<boolean>(false);
+export default function QRScanner({ onScan }: QRScannerProps) {
+  useEffect(() => {
+    const scanner = new Html5Qrcode("qr-reader");
 
-  const handleResult = (result: any) => {
-    if (result && !scanned) {
-      setScanned(true);
-      onScanSuccess(result?.text);
-    }
-  };
+    scanner
+      .start(
+        { facingMode: "environment" },
+        {
+          fps: 10,
+          qrbox: 250,
+        },
+        (decodedText) => {
+          onScan(decodedText);
+        },
+        (error) => {
+          // ignore scan errors
+        }
+      )
+      .catch(() => {});
 
-  return (
-    <div className="w-full max-w-md mx-auto bg-white p-4 rounded-xl shadow">
-      <QrReader
-        constraints={{ facingMode: "environment" }}
-        onResult={(result: any, err: any) => {
-          if (result) {
-            handleResult(result);
-          }
-          if (err) {
-            setError("Camera access required.");
-          }
-        }}
-        containerStyle={{ width: "100%" }}
-      />
+    return () => {
+      scanner.stop().catch(() => {});
+    };
+  }, [onScan]);
 
-      {error && (
-        <div className="mt-4 text-sm text-red-600 bg-red-50 p-3 rounded">
-          {error}
-        </div>
-      )}
-    </div>
-  );
+  return <div id="qr-reader" className="w-full max-w-md mx-auto" />;
 }
+
