@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { verifyHMACToken } from "@/lib/hmac";
 
 export async function POST(req: NextRequest) {
-  const supabase = createClient();
+  const supabase = await createClient();
 
   const body = await req.json();
   const { sessionId, qrToken } = body;
