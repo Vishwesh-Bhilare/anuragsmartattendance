@@ -1,23 +1,24 @@
-// components/shared/RoleGuard.tsx
-
 "use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClient } from "@supabase/supabase-js";
 
 interface RoleGuardProps {
   allowedRole: "student" | "faculty" | "admin";
   children: React.ReactNode;
 }
 
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+
 export default function RoleGuard({
   allowedRole,
   children,
 }: RoleGuardProps) {
-  const supabase = createClientComponentClient();
   const router = useRouter();
-
   const [authorized, setAuthorized] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -51,7 +52,7 @@ export default function RoleGuard({
     };
 
     checkRole();
-  }, [allowedRole, router, supabase]);
+  }, [allowedRole, router]);
 
   if (authorized === null) {
     return (
