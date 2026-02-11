@@ -1,11 +1,11 @@
 // app/api/sessions/validate/route.ts
 
 import { NextRequest, NextResponse } from "next/server";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 import { verifyHMACToken } from "@/lib/hmac";
 
 export async function POST(req: NextRequest) {
-  const supabase = createServerSupabaseClient();
+  const supabase = createClient();
 
   const body = await req.json();
   const { sessionId, qrToken } = body;

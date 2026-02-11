@@ -1,10 +1,10 @@
 // app/api/courses/route.ts
 
 import { NextResponse } from "next/server";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 
 export async function GET() {
-  const supabase = createServerSupabaseClient();
+  const supabase = createClient();
 
   const {
     data: { session },

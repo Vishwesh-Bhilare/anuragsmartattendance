@@ -1,10 +1,10 @@
 // app/dashboard/faculty/courses/page.tsx
 
 import { redirect } from "next/navigation";
-import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { createClient } from "@/lib/supabase/server";
 
 export default async function CoursesPage() {
-  const supabase = createServerSupabaseClient();
+  const supabase = createClient();
 
   const {
     data: { session },
